@@ -89,3 +89,12 @@ Ground truth is server-reported `prompt_n` per rung; `max_tokens=16` isolates pr
 ## 8. Client setup (production)
 
 Consumer configured to context 32768 with compaction (reserve 8192 → fires at 24576; post-compact ~22k; next trigger ~24.5k prefill — all inside ladder-proven ground), output cap at half the window, 30-min timeouts. Keep the tool/skill set stable per session — a mid-chat skill load re-renders the prompt prefix and forces a total-cache-miss re-prefill.
+
+## 9. Thinking toggle (pi + ik server, verified)
+
+Alibaba's levels are `xhigh` (default, what their benchmarks use), `medium`, `low`. The server fixes one via `--chat-template-kwargs` but honors **per-request** `chat_template_kwargs` (server-common.cpp merges them over the CLI default) — so pi can switch effort mid-session with no restart:
+
+- pi model entry (`~/.pi/agent/models.json`): `"reasoning": true`, `thinkingLevelMap` {off→off, minimal/low→low, medium→medium, high/xhigh/max→xhigh}, `compat: {thinkingFormat: "chat-template", chatTemplateKwargs: {enable_thinking: {$var: "thinking.enabled"}, preserve_thinking: true, reasoning_effort: {}}}`.
+- In-session: `/thinking low|medium|max` (default medium = today's behavior, zero change until touched).
+- Verified live: same puzzle, low → 3.3k thinking chars, xhigh → 5.5k, both correct.
+- With a near-full window prefer low/medium — xhigh's extra thinking tokens come out of remaining context.
