@@ -34,3 +34,7 @@ Separate project: [qwen25-q3-qat](https://github.com/TitanMamo/qwen25-q3-qat) (3
 
 - ub432 (PP ~22) is a 2-rung probe, not a ladder — no ceiling measured.
 - ad16k-s died on rung 6 at the 16k ctx wall rather than clean-refusing — reported as-is.
+
+## How this was built (human + AI)
+
+Ideas, direction, and verification standards are mine; implementation is AI-assisted. I set the questions (ladder the ceilings, pre-register the bars, ablate the failures), the AI writes the code, harnesses, and drafts — I review, catch mistakes, and redirect. The ladder method that found every ceiling, the export-bug hunt, the batch-scaling postmortem, and the #2414 concession all came out of that loop. Nothing here was accepted on the AI's say-so: every number is a measured artifact, every "rejected" verdict is documented, and the honest-gaps section above is deliberate — falsifiable claims over optimism.
