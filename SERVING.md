@@ -71,6 +71,7 @@ Harness: `scripts/bench-ladder.sh` — accumulating pi-style history, server `pr
 | recipe | ub | KV | PP (per rung) | last ok (prompt_n) | death |
 |---|---|---|---|---|---|
 | ad16k | 1024 | q8 | 42.2, 40.7, 39.7 | 7699 | rung 4 OOM |
+| ad16k-800 | 800 | q8 | 31.7, 30.3, 32.1, 31.0 | 11543 | rung 5 OOM (~15k attempt) |
 | ad16k-s | 512 | q8 | 27.9, 25.7, 24.9, 25.2, 24.9 | 15387 | rung 6, died at 16k ctx wall (not a clean refusal) |
 | ad32k-q6 | 512 | q6 | 26.9, 24.9, 24.6, 25.2, 24.9 | 15387 | rung 6 OOM |
 | ad32k-q4 | 512 | q4 | 27.1, 25.1, 24.6, 25.2, 24.9, 25.2 | 19231 | rung 7 OOM |

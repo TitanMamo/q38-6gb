@@ -53,6 +53,7 @@ Common flags for all: `--prefetch-experts --defer-ple --flash-attn on -wgt 1 --c
 | iq1m-96k | IQ1_M | 98304 | 512 | 512 / 2048 | same | PP 29.0, gen 4.4 |
 | iq1m-128k | IQ1_M | 131072 | 512 | 384 / 2048 | q4+had both + ictk q8 | PP 23.9, gen 4.0 |
 | ad16k | AD | 16384 | 384 | 1024 / 2048 | q8/q8 | PP 40.6, tg 7.3 |
+| ad16k-800 | AD | 16384 | 384 | 800 / 2048 | q8/q8 | PP ~31, proven 11543 (production pick) |
 | ad16k-s | AD | 16384 | 384 | 512 / 2048 | q8/q8 | PP ~25 |
 | ad32k-q6 | AD | 32768 | 384 | 512 / 2048 | Kq6/Vq6 + ictk q8 | PP ~25, ceil ~19k |
 | ad32k-q6u | AD | 32768 | 384 | 1024 / 2048 | same | NO-FIT at load |
