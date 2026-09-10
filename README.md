@@ -19,7 +19,7 @@ Serving a 176B-class MoE (`qwen4exp`: 125B MoE + 51B PLE + 4B MTP) on a GTX 1660
 
 The headline negative result: **no config does PP-30 and 32k simultaneously on this card** — [the ladder and the mechanism](POST-why-no-30-32k.md).
 
-**Upstream:** 1 PR (crash-wedge fix, verified live 7x) + 2 HF data posts — [record](UPSTREAM.md).
+**Upstream:** 1 merged PR (crash-wedge fix, verified live 8x) + 2 HF data posts — [record](UPSTREAM.md).
 
 Separate project: [qwen25-q3-qat](https://github.com/TitanMamo/qwen25-q3-qat) (3-bit quantization + QAT on Qwen2.5 0.5B/1.5B). Different model, different question — kept apart deliberately.
 
