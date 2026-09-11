@@ -32,6 +32,25 @@ this experiment runs their stack standalone first, port decision after.
 6. Verdict: adopt (switch stack or port), reject (record why), or
    scope (e.g. helps PP not tg).
 
+## Verdict: REJECTED for 6 GB (2026-09-11)
+
+| Stack (IQ1_M, c8192) | PP t/s | tg t/s | VRAM |
+| --- | --- | --- | --- |
+| mainline `perf` baseline | 5.88 | 6.79 | 4358 MB |
+| mainline `perf` + cache 8 slots | 7.10 (+21%) | 5.93 (−13%) | 5456 MB |
+| ik production (c32k, reference) | 47.67 | 7.82 | ~2 GB dense |
+
+Cache engaged (+1098 MB pack, profile valid, 48/48 layers matched).
+Prefill win matches their claims; decode loses: 8/512 experts/layer =
+1.6% coverage, far below their ~25% breakeven — dual-path overhead wins.
+VRAM caps us at ~8 slots, so the breakeven is unreachable on 6 GB.
+Stack gap is decisive anyway (ik PP 47 vs 7).
+
+Genuine bycatch, kept: their residency gate (`buft_is_host`) silently
+no-ops for mmap'd models (all big models on small RAM). One-line fix —
+Upstream note: thecodacus/llama.cpp has issues disabled; patch kept
+locally (this file) — offered via discussion/video comment if suitable.
+
 ## Status log
 
 - 2026-09-11: branch cloned at 27c54b4b, CUDA build fired; IQ1_M
