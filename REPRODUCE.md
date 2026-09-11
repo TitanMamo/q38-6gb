@@ -42,7 +42,7 @@ export LD_LIBRARY_PATH=<staged 580 libcuda/libnvidia-ml>:<build>/src:<build>/ggm
 
 ## 5. Recipes (complete table)
 
-Common flags for all: `--prefetch-experts --defer-ple --flash-attn on -wgt 1 --ctx-checkpoints-interval 0 --ctx-checkpoints 0 -t 4 -tb 6 -np 1 --jinja` (reasoning_effort medium), `temp 1.0, top-p 0.95, top-k 20`. Checkpoints are **off** (on-by-default checkpoints ate 3.6 GB VRAM and crash hybrid state — SERVING.md §4).
+Common flags for all: `--prefetch-experts --defer-ple --flash-attn on -wgt 1 --ctx-checkpoints-interval 1024 --ctx-checkpoints 8 -t 4 -tb 6 -np 1 --jinja` (reasoning_effort medium), `temp 1.0, top-p 0.95, top-k 20`. Checkpoints are **on, cap 8** (evolved from off — SERVING.md §4; restores 16–95 ms, 0 fatals, with a bit-exactness caveat tracked in #2433).
 
 | recipe | quant | ctx | fit-margin | ub / b | KV cache | measured |
 |---|---|---|---|---|---|---|
@@ -53,14 +53,14 @@ Common flags for all: `--prefetch-experts --defer-ple --flash-attn on -wgt 1 --c
 | iq1m-96k | IQ1_M | 98304 | 512 | 512 / 2048 | same | PP 29.0, gen 4.4 |
 | iq1m-128k | IQ1_M | 131072 | 512 | 384 / 2048 | q4+had both + ictk q8 | PP 23.9, gen 4.0 |
 | ad16k | AD | 16384 | 384 | 1024 / 2048 | q8/q8 | PP 40.6, tg 7.3 |
-| ad16k-800 | AD | 16384 | 384 | 800 / 2048 | q8/q8 | PP ~31, proven 11543 (production pick) |
+| ad16k-800 | AD | 16384 | 384 | 800 / 2048 | q8/q8 | PP ~31, proven 11543 |
 | ad16k-s | AD | 16384 | 384 | 512 / 2048 | q8/q8 | PP ~25 |
 | ad32k-q6 | AD | 32768 | 384 | 512 / 2048 | Kq6/Vq6 + ictk q8 | PP ~25, ceil ~19k |
 | ad32k-q6u | AD | 32768 | 384 | 1024 / 2048 | same | NO-FIT at load |
 | ad32k-q6-384 | AD | 32768 | 384 | 384 / 2048 | same | PP ~17, 26919 ok |
 | ad32k-q4 | AD | 32768 | 384 | 512 / 2048 | q4+had both + ictk q8 | PP ~25, ceil ~23k |
 | ad32k-q4-384 | AD | 32768 | 384 | 384 / 2048 | same | PP ~17, **30763 proven** |
-| ad32k-q4-432 | AD | 32768 | 384 | 432 / 1728 | same | PP ~22, probe only |
+| ad32k-q4-432 | AD | 32768 | 384 | 432 / 1728 | same | PP ~22, **production** (ckpt 8/1024, spill binary) |
 | ad48k | AD | 49152 | 512 | 128 / 1024 | q4+had both + ictk q8 | PP 6.3, gen 2.9 |
 
 Margins are load-bearing, not cosmetic: 32k/m384 → 768 (16k-prefill OOM), 48k/m512 → 1024 (24k-extension OOMs). On AD the margin cannot go above 512 (dense stack too fat — 40 MB slack).

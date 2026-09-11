@@ -14,8 +14,9 @@ Serving a 176B-class MoE (`qwen4exp`: 125B MoE + 51B PLE + 4B MTP) on a GTX 1660
 | UD-IQ1_M, q8 KV, ub1024 | 32k daily driver | 47.7 t/s | ~7.8 | quality probe PASS |
 | UD-IQ1_M ladder (KV shedding) | **128k** (192k fails fit) | 23.9 | 4.0 | probes PASS at every rung |
 | AD-4.27, q8 KV, ub1024 | 16k quality tier | 40.6 | 7.3 | 89.5% top-1 |
-| AD-4.27, q8 KV, ub800 | 16k, 11.5k proven | ~31 | 7.3 | production pick: speed + 10k usable |
+| AD-4.27, q8 KV, ub800 | 16k, 11.5k proven | ~31 | 7.3 | speed pick for 10k chats |
 | AD-4.27, q4 KV, ub384 | **30.8k** | ~17 | — | max-context winner |
+| AD-4.27, q4 KV, ub432 | 32k, ckpt 8/1024 | ~22 | — | **production** (spill binary, restores 16–95 ms) |
 
 The headline negative result: **no config does PP-30 and 32k simultaneously on this card** — [the ladder and the mechanism](POST-why-no-30-32k.md).
 
