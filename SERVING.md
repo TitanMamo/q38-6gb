@@ -32,6 +32,7 @@ Findings:
 | final: margin 384 + prefetch + `-t 4 -tb 5` + ub1024 | **7.57 best, 7.0–7.3 typical** | — |
 
 PP is a ubatch sweep: ub256 → 22.6, **ub1024 → 45.4**, ub1536 → server spins (abandoned), ub2048 → OOM at context creation. Later: `-wgt 1` rescued ub1024 on the Q8_0 dense stack (AD-4.27 PP 22.7 → 39.3, +73%), and `-tb 6` + auto-prefetch confirmed optimal after rejecting tb8 / prefetch-threads 8 / ub1536 (all measured, all rejected). MTP speculative decoding unavailable (no MTP tail in the quant). Final defaults: `CTX=32768 MARGIN=384 UBU=1024 T=4 TB=6 wgt1`, q8 KV, flash-attn, checkpoints off.
+Postscript (Sept 2026): ub 432→512 re-sweep on ad32k-q4-432 (identical essay probe): PP 2.74→3.01, tg 6.79→6.81 — noise, no gain. Interactive prompts are expert-streaming-bound, not ubatch-bound; ub432 stands.
 
 ## 3. The freeze saga (8 hard freezes → root-caused, fixed)
 
