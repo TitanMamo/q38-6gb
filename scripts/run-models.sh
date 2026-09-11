@@ -75,12 +75,15 @@ echo "recipe $RECIPE -> $MODEL (ctx $CTX, ub $UBU)"
 q38_stop_server || exit 1
 q38_require_free || exit 1
 
+# NOTE (2026-09-11): ckpt 8/1024 below — restores kill the miss-reprocess OOM
+# class (30.8k proven with ~7k prefills, 0 fatals). Was 0/0 (erase-crash
+# survival); crash scoped away by scale probes to 31k.
 exec taskset -c 0-5 "$BIN_DIR/llama-server" \
   --model "$MODEL" --alias Qwen3.8-Flash-Next \
   --ctx-size "$CTX" --fit --fit-margin "$MARGIN" \
   --prefetch-experts --defer-ple \
   --flash-attn on $CACHE \
-  -wgt 1 --ctx-checkpoints-interval 0 --ctx-checkpoints 0 \
+  -wgt 1 --ctx-checkpoints-interval 1024 --ctx-checkpoints 8 \
   -b "$BB" -ub "$UBU" -t 4 -tb 6 -np 1 \
   --jinja --chat-template-kwargs '{"reasoning_effort":"medium"}' \
   --temp 1.0 --top-p 0.95 --top-k 20 --min-p 0.0 --presence-penalty 0.0 \
